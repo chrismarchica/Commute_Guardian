@@ -1,4 +1,4 @@
-# 🚇 Commute Guardian (MBTA)
+# Commute Guardian (MBTA)
 
 **Real-time MBTA reliability tracking and smart departure advice for Boston commuters**
 
@@ -11,16 +11,16 @@ Commute Guardian is a production-ready monorepo application that ingests MBTA da
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.4-blue)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue)
 
-## 🌟 Features
+## Features
 
-### 🎯 Core Functionality
+### Core Functionality
 - **Real-time Reliability Tracking**: Continuous monitoring of MBTA service performance
 - **Smart Leave-Now Advice**: AI-powered departure recommendations with risk assessment
 - **Historical Analysis**: Route/stop reliability patterns by time-of-day and day-of-week
 - **Service Alerts Integration**: Real-time service disruption notifications
 - **Offline Demo Mode**: Complete functionality using fixture data (no API keys required)
 
-### 🏗️ Technical Highlights
+### Technical Highlights
 - **Monorepo Architecture**: Organized codebase with shared types and utilities
 - **MBTA Data Ingestion**: Supports both GTFS static/realtime and MBTA v3 REST API
 - **EWMA Predictions**: Exponentially Weighted Moving Average for delay forecasting
@@ -28,7 +28,7 @@ Commute Guardian is a production-ready monorepo application that ingests MBTA da
 - **Production Monitoring**: Health checks, metrics, and comprehensive logging
 - **Windows-First Development**: PowerShell scripts for seamless Windows development
 
-## 🏛️ Architecture
+## Architecture
 
 ```
 commute-guardian/
@@ -56,7 +56,7 @@ commute-guardian/
 └─ .github/workflows/      # CI/CD pipeline
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - **Docker Desktop** (recommended) OR
@@ -85,13 +85,13 @@ curl -X POST "http://localhost:8080/admin/replayFixtures?speed=10"
 .\scripts\dev.ps1 -Local
 ```
 
-### 🎯 Access Points
+### Access Points
 - **Frontend Dashboard**: http://localhost:3000
 - **Backend API**: http://localhost:8080
 - **API Documentation**: http://localhost:8080/swagger-ui.html
 - **Database**: localhost:5432 (postgres/postgres)
 
-## 📊 API Endpoints
+## API Endpoints
 
 ### Core Endpoints
 ```http
@@ -121,7 +121,7 @@ curl "http://localhost:8080/api/stops/near?lat=42.3555&lon=-71.0640&radius=800"
 curl "http://localhost:8080/api/leave-now?fromStop=place-pktrm&toStop=place-harsq"
 ```
 
-## 🗄️ Database Schema
+## Database Schema
 
 ### Core Tables
 - **`routes`**: MBTA route information (Red, Orange, Blue, Green lines)
@@ -138,7 +138,7 @@ rt_trip_updates (N:1) routes, stops
 metrics_route_stop_hour (N:1) routes, stops
 ```
 
-## 🧠 Algorithms & Intelligence
+## Algorithms & Intelligence
 
 ### Reliability Metrics
 - **On-time Performance**: Percentage of arrivals within ±2 minutes of schedule
@@ -158,7 +158,7 @@ metrics_route_stop_hour (N:1) routes, stops
 - Transfer stations (Park Street, Downtown Crossing)
 - Active service alerts and disruptions
 
-## 🛠️ Development
+## Development
 
 ### Build Commands
 ```powershell
@@ -194,7 +194,7 @@ metrics_route_stop_hour (N:1) routes, stops
 - **Testing**: JUnit 5, Testcontainers, Vitest, React Testing Library
 - **CI/CD**: GitHub Actions with automated testing and Docker builds
 
-## 🔧 Configuration
+## Configuration
 
 ### Environment Variables
 
@@ -242,7 +242,7 @@ const interchanges = {
 }
 ```
 
-## 📦 Deployment
+## Deployment
 
 ### Docker Compose (Production)
 ```bash
@@ -277,7 +277,7 @@ spec:
         - containerPort: 8080
 ```
 
-## 🔍 Monitoring & Observability
+## Monitoring & Observability
 
 ### Health Checks
 - **Application**: `/api/health` endpoint with service status
@@ -291,7 +291,7 @@ spec:
 - **Performance Monitoring**: Request timing, database query performance
 - **Business Metrics**: Reliability calculation performance, prediction accuracy
 
-## 🧪 Offline Demo
+## Offline Demo
 
 Perfect for development, demos, and testing without MBTA API access:
 
@@ -310,13 +310,13 @@ open http://localhost:3000
 ```
 
 The offline demo includes:
-- ✅ Complete MBTA route network (Red, Orange, Blue, Green lines)
-- ✅ Realistic delay patterns and service disruptions
-- ✅ Historical reliability data generation
-- ✅ Full leave-now advice functionality
-- ✅ Interactive reliability heatmaps
+- Complete MBTA route network (Red, Orange, Blue, Green lines)
+- Realistic delay patterns and service disruptions
+- Historical reliability data generation
+- Full leave-now advice functionality
+- Interactive reliability heatmaps
 
-## 🤝 Contributing
+## Contributing
 
 ### Getting Started
 1. Fork the repository
@@ -334,11 +334,11 @@ The offline demo includes:
 - Use conventional commit messages
 - Ensure all CI checks pass
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - **MBTA**: For providing open transit data through GTFS and real-time APIs
 - **Spring Boot**: For the robust backend framework
@@ -346,7 +346,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **PostgreSQL**: For reliable data storage
 - **Docker**: For containerization and deployment simplicity
 
-## 📞 Support
+## Support
 
 - **Documentation**: Check this README and inline code comments
 - **Issues**: [GitHub Issues](https://github.com/your-org/commute-guardian/issues)
@@ -355,6 +355,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Built with ❤️ for Boston commuters** 🚇
+**Built for Boston commuters**
 
 *Helping you navigate the T with confidence, one prediction at a time.*
