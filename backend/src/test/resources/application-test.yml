@@ -1,0 +1,62 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: false
+  
+  flyway:
+    enabled: false  # Disable Flyway for tests, use JPA DDL auto
+  
+  cache:
+    type: simple
+  
+  task:
+    scheduling:
+      pool:
+        size: 1
+
+# Test-specific MBTA configuration
+mbta:
+  api:
+    base-url: http://localhost:8080/mock-mbta-api
+    key: test-key
+    timeout: 5s
+  
+  gtfs:
+    static-url: http://localhost:8080/mock-gtfs-static.zip
+    realtime:
+      trip-updates-url: http://localhost:8080/mock-trip-updates.pb
+      vehicle-positions-url: http://localhost:8080/mock-vehicle-positions.pb
+      fetch-interval: 10s
+
+# CORS configuration for tests
+cors:
+  allowed-origins: http://localhost:3000
+  allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+  allowed-headers: "*"
+  allow-credentials: true
+
+# Reliability analysis test configuration
+reliability:
+  analysis:
+    on-time-threshold-seconds: 120
+    ewma-alpha: 0.3
+    min-samples-for-prediction: 5
+    risk-bands:
+      low-threshold: 0.8
+      medium-threshold: 0.6
+
+# Logging for tests
+logging:
+  level:
+    com.commute.mbta: DEBUG
+    org.springframework.web: WARN
+    org.hibernate: WARN
+    org.testcontainers: INFO

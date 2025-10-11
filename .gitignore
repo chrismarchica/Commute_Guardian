@@ -1,0 +1,630 @@
+# Commute Guardian - Comprehensive .gitignore
+# Excludes build artifacts, dependencies, IDE files, logs, and test files
+
+###########################################
+# Operating System Files
+###########################################
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+###########################################
+# IDE and Editor Files
+###########################################
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+.idea_modules/
+
+# Eclipse
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+.project
+.classpath
+.factorypath
+.buildpath
+.target
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# Visual Studio Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# Sublime Text
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+*.sublime-project
+
+# Vim
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+Session.vim
+Sessionx.vim
+.netrwhist
+*~
+tags
+[._]*.un~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+###########################################
+# Java / Maven / Spring Boot
+###########################################
+
+# Compiled class files
+*.class
+
+# Log files
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Virtual machine crash logs
+hs_err_pid*
+replay_pid*
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Gradle
+.gradle
+**/build/
+!src/**/build/
+gradle-app.setting
+!gradle-wrapper.jar
+!gradle-wrapper.properties
+.gradletasknamecache
+
+# Spring Boot
+spring-boot-*.log
+application-*.log
+
+###########################################
+# Node.js / npm / Frontend
+###########################################
+
+# Dependencies
+node_modules/
+jspm_packages/
+
+# Production builds
+/build
+/dist
+/.next/
+/out/
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+.nyc_output
+
+# Grunt intermediate storage
+.grunt
+
+# Bower dependency directory
+bower_components
+
+# node-waf configuration
+.lock-wscript
+
+# Compiled binary addons
+build/Release
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional stylelint cache
+.stylelintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variables file
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+
+# parcel-bundler cache
+.cache
+.parcel-cache
+
+# Next.js build output
+.next
+out
+
+# Nuxt.js build / generate output
+.nuxt
+dist
+
+# Storybook build outputs
+.out
+.storybook-out
+storybook-static
+
+# Temporary folders
+tmp/
+temp/
+
+# Vite
+dist-ssr
+*.local
+
+###########################################
+# Database Files
+###########################################
+
+# H2 Database
+*.h2.db
+*.trace.db
+*.lock.db
+
+# SQLite
+*.sqlite
+*.sqlite3
+*.db
+
+# PostgreSQL
+*.sql.backup
+
+###########################################
+# Docker & Container Files
+###########################################
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+docker-compose.*.yml
+!docker-compose.yml
+!docker-compose.prod.yml
+
+###########################################
+# Test Files and Coverage Reports
+###########################################
+
+# Test results
+**/test-results/
+**/test-reports/
+junit.xml
+TEST-*.xml
+
+# Coverage reports
+coverage/
+*.lcov
+.nyc_output/
+jacoco.xml
+jacoco-it.xml
+**/target/site/jacoco/
+**/target/site/jacoco-it/
+
+# Test databases
+**/src/test/resources/data/
+test.db
+test.sqlite
+
+# JUnit Platform
+junit-platform-*.properties
+
+# Surefire reports
+**/target/surefire-reports/
+**/target/failsafe-reports/
+
+# Vitest
+coverage/
+test-results/
+
+# Jest
+jest-results.xml
+
+###########################################
+# Logs and Monitoring
+###########################################
+
+# Application logs
+logs/
+*.log
+*.log.*
+log/
+
+# System logs
+/var/log/
+
+# Monitoring and metrics
+metrics/
+prometheus/
+
+###########################################
+# Security and Secrets
+###########################################
+
+# Environment files with secrets
+.env
+.env.local
+.env.*.local
+.env.production
+.env.staging
+
+# API keys and secrets
+secrets/
+*.key
+*.pem
+*.p12
+*.jks
+keystore
+truststore
+
+# OAuth tokens
+.oauth
+
+# AWS credentials
+.aws/
+
+# SSH keys
+id_rsa
+id_dsa
+id_ecdsa
+id_ed25519
+*.pub
+
+###########################################
+# Build and Deployment Artifacts
+###########################################
+
+# Build outputs
+build/
+dist/
+target/
+out/
+*.war
+*.jar
+*.ear
+
+# Deployment files
+deploy/
+deployment/
+k8s-generated/
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# Ansible
+*.retry
+
+###########################################
+# Backup and Temporary Files
+###########################################
+
+# Backup files
+*.bak
+*.backup
+*.old
+*.orig
+*.save
+*~
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/
+temp/
+
+# Swap files
+*.swp
+*.swo
+
+# Lock files (except package-lock.json and yarn.lock)
+*.lock
+!package-lock.json
+!yarn.lock
+!Gemfile.lock
+!Pipfile.lock
+
+###########################################
+# Cache and Generated Files
+###########################################
+
+# Cache directories
+.cache/
+*.cache
+
+# Generated documentation
+docs/generated/
+javadoc/
+typedoc/
+
+# Generated source files
+**/generated/
+**/target/generated-sources/
+**/target/generated-test-sources/
+
+# OpenAPI generated files
+**/generated-sources/openapi/
+
+###########################################
+# Project Specific
+###########################################
+
+# MBTA API keys and credentials
+mbta-api-key.txt
+credentials.json
+
+# Local configuration overrides
+application-local.yml
+application-local.properties
+local.properties
+
+# Fixture data (large files)
+fixtures/**/*.zip
+fixtures/**/*.pb
+fixtures/**/*.json
+!fixtures/**/.gitkeep
+!fixtures/**/README.md
+
+# Local development databases
+commute_guardian_local.db
+local.db
+
+# Performance profiling
+*.hprof
+*.prof
+
+# JVM dumps
+*.dump
+heap.bin
+
+# Local scripts and utilities
+local-scripts/
+utils/local/
+
+###########################################
+# CI/CD and Deployment
+###########################################
+
+# CI/CD artifacts
+.github/workflows/generated/
+ci-reports/
+
+# Deployment configurations
+k8s/local/
+helm/values-local.yaml
+docker-compose.local.yml
+
+# Build metadata
+.build/
+build-info.json
+
+###########################################
+# Documentation Build Artifacts
+###########################################
+
+# Sphinx documentation
+docs/_build/
+docs/build/
+
+# MkDocs
+site/
+
+# GitBook
+_book/
+
+###########################################
+# Package Manager Files
+###########################################
+
+# npm
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# pnpm
+.pnpm-debug.log*
+
+# Yarn v2
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+###########################################
+# Miscellaneous
+###########################################
+
+# Thumbnails
+*.thumbnail
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows Installer files
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+# JetBrains IDEs
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# VS Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Local History for Visual Studio Code
+.history/
+
+# Windows Installer files from build outputs
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+###########################################
+# Keep Important Files
+###########################################
+
+# Keep these files even if they match patterns above
+!.gitkeep
+!.gitignore
+!.github/workflows/ci.yml
+!.github/workflows/*.yml
+!.github/ISSUE_TEMPLATE/
+!.github/PULL_REQUEST_TEMPLATE.md
+!README.md
+!LICENSE
+!CHANGELOG.md
+!CONTRIBUTING.md

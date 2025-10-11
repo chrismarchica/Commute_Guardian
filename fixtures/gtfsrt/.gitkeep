@@ -1,0 +1,8 @@
+# This directory will contain GTFS-RT protobuf files
+#
+# In production, place GTFS-RT files here:
+# - trip_updates.pb (from https://cdn.mbta.com/realtime/TripUpdates.pb)
+# - vehicle_positions.pb (from https://cdn.mbta.com/realtime/VehiclePositions.pb)
+#
+# For development, the application will create placeholder files
+# when the admin/replayFixtures endpoint is called

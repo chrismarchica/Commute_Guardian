@@ -1,0 +1,7 @@
+# This directory will contain GTFS static data files
+# 
+# In production, place the MBTA GTFS zip file here:
+# - mbta.zip (downloaded from https://cdn.mbta.com/MBTA_GTFS.zip)
+#
+# For development, the application will create placeholder files
+# when the admin/loadStatic endpoint is called with source=file
