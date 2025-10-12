@@ -14,9 +14,17 @@ export default function Dashboard() {
   const [userLocation, setUserLocation] = useState<{ lat: number; lon: number } | null>(null)
 
   // Health check query
-  const { data: healthData, isLoading: healthLoading } = useQuery({
+  const { data: healthData, isLoading: healthLoading } = useQuery<{
+    status: string;
+    timestamp: string;
+    uptime: number;
+  }>({
     queryKey: ['health'],
-    queryFn: () => apiClient.get('/api/health').then(res => res.data),
+    queryFn: () => apiClient.get('/api/health').then(res => res.data as {
+      status: string;
+      timestamp: string;
+      uptime: number;
+    }),
     refetchInterval: 30000, // Check every 30 seconds
   })
 
@@ -61,7 +69,7 @@ export default function Dashboard() {
               Service: {healthLoading ? 'Checking...' : 'Online'}
             </span>
           </div>
-          {healthData && (
+          {healthData?.timestamp && (
             <span className="text-sm text-gray-500">
               Last updated: {new Date(healthData.timestamp).toLocaleTimeString()}
             </span>

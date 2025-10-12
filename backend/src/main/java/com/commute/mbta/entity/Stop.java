@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.math.BigDecimal;
 import java.time.Instant;
 
 /** JPA entity for MBTA stops. */
@@ -19,10 +20,10 @@ public class Stop {
   private String name;
 
   @Column(name = "latitude", nullable = false, precision = 10, scale = 8)
-  private Double latitude;
+  private BigDecimal latitude;
 
   @Column(name = "longitude", nullable = false, precision = 11, scale = 8)
-  private Double longitude;
+  private BigDecimal longitude;
 
   @Column(name = "location_type")
   private Integer locationType = 0;
@@ -46,7 +47,7 @@ public class Stop {
   public Stop() {}
 
   // Constructor with required fields
-  public Stop(String id, String name, Double latitude, Double longitude) {
+  public Stop(String id, String name, BigDecimal latitude, BigDecimal longitude) {
     this.id = id;
     this.name = name;
     this.latitude = latitude;
@@ -72,19 +73,19 @@ public class Stop {
     this.name = name;
   }
 
-  public Double getLatitude() {
+  public BigDecimal getLatitude() {
     return latitude;
   }
 
-  public void setLatitude(Double latitude) {
+  public void setLatitude(BigDecimal latitude) {
     this.latitude = latitude;
   }
 
-  public Double getLongitude() {
+  public BigDecimal getLongitude() {
     return longitude;
   }
 
-  public void setLongitude(Double longitude) {
+  public void setLongitude(BigDecimal longitude) {
     this.longitude = longitude;
   }
 

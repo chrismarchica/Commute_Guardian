@@ -1,14 +1,15 @@
 import '@testing-library/jest-dom'
+import { vi } from 'vitest'
 
 // Mock Next.js router
-jest.mock('next/navigation', () => ({
+vi.mock('next/navigation', () => ({
   useRouter: () => ({
-    push: jest.fn(),
-    replace: jest.fn(),
-    back: jest.fn(),
-    forward: jest.fn(),
-    refresh: jest.fn(),
-    prefetch: jest.fn(),
+    push: vi.fn(),
+    replace: vi.fn(),
+    back: vi.fn(),
+    forward: vi.fn(),
+    refresh: vi.fn(),
+    prefetch: vi.fn(),
   }),
   useParams: () => ({}),
   useSearchParams: () => new URLSearchParams(),
@@ -19,20 +20,20 @@ jest.mock('next/navigation', () => ({
 process.env.NEXT_PUBLIC_API_BASE_URL = 'http://localhost:8080'
 
 // Global test utilities
-global.ResizeObserver = jest.fn().mockImplementation(() => ({
-  observe: jest.fn(),
-  unobserve: jest.fn(),
-  disconnect: jest.fn(),
+global.ResizeObserver = vi.fn().mockImplementation(() => ({
+  observe: vi.fn(),
+  unobserve: vi.fn(),
+  disconnect: vi.fn(),
 }))
 
 // Mock fetch for API calls
-global.fetch = jest.fn()
+global.fetch = vi.fn()
 
 // Mock geolocation
 const mockGeolocation = {
-  getCurrentPosition: jest.fn(),
-  watchPosition: jest.fn(),
-  clearWatch: jest.fn(),
+  getCurrentPosition: vi.fn(),
+  watchPosition: vi.fn(),
+  clearWatch: vi.fn(),
 }
 
 Object.defineProperty(global.navigator, 'geolocation', {

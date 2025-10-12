@@ -64,6 +64,7 @@ commute-guardian/
 
 ### Option 1: Docker (Recommended)
 
+**Windows (PowerShell):**
 ```powershell
 # Clone the repository
 git clone https://github.com/your-org/commute-guardian.git
@@ -77,12 +78,34 @@ curl -X POST "http://localhost:8080/admin/loadStatic?source=file"
 curl -X POST "http://localhost:8080/admin/replayFixtures?speed=10"
 ```
 
+**Linux/WSL2 (Bash):**
+```bash
+# Clone the repository
+git clone https://github.com/your-org/commute-guardian.git
+cd commute-guardian
+
+# Start the complete stack
+./scripts/dev.sh --docker
+
+# Load sample data for offline demo
+curl -X POST "http://localhost:8080/admin/loadStatic?source=file"
+curl -X POST "http://localhost:8080/admin/replayFixtures?speed=10"
+```
+
 ### Option 2: Local Development
 
+**Windows (PowerShell):**
 ```powershell
 # Ensure PostgreSQL is running with database 'commute_guardian'
 # Then start both applications
 .\scripts\dev.ps1 -Local
+```
+
+**Linux/WSL2 (Bash):**
+```bash
+# Ensure PostgreSQL is running with database 'commute_guardian'
+# Then start both applications
+./scripts/dev.sh --local
 ```
 
 ### Access Points
@@ -161,6 +184,8 @@ metrics_route_stop_hour (N:1) routes, stops
 ## Development
 
 ### Build Commands
+
+**Windows (PowerShell):**
 ```powershell
 # Build everything
 .\scripts\build.ps1
@@ -174,7 +199,23 @@ metrics_route_stop_hour (N:1) routes, stops
 .\scripts\build.ps1 -Clean -Test
 ```
 
+**Linux/WSL2 (Bash):**
+```bash
+# Build everything
+./scripts/build.sh
+
+# Build specific components
+./scripts/build.sh --backend
+./scripts/build.sh --frontend
+./scripts/build.sh --docker
+
+# Clean build with tests
+./scripts/build.sh --clean --test
+```
+
 ### Testing
+
+**Windows (PowerShell):**
 ```powershell
 # Run all tests
 .\scripts\test.ps1
@@ -186,6 +227,20 @@ metrics_route_stop_hour (N:1) routes, stops
 
 # Generate coverage reports
 .\scripts\test.ps1 -Coverage
+```
+
+**Linux/WSL2 (Bash):**
+```bash
+# Run all tests
+./scripts/test.sh
+
+# Run specific test suites
+./scripts/test.sh --backend      # JUnit + Testcontainers
+./scripts/test.sh --frontend     # Vitest + React Testing Library
+./scripts/test.sh --integration  # End-to-end API tests
+
+# Generate coverage reports
+./scripts/test.sh --coverage
 ```
 
 ### Code Quality

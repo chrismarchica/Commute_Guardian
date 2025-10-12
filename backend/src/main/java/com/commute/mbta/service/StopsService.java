@@ -92,8 +92,8 @@ public class StopsService {
                 StopDto.of(
                     stop.getId(),
                     stop.getName(),
-                    stop.getLatitude(),
-                    stop.getLongitude(),
+                    stop.getLatitude().doubleValue(),
+                    stop.getLongitude().doubleValue(),
                     getRoutesForStop(stop.getId())))
         .toList();
   }
@@ -112,8 +112,8 @@ public class StopsService {
                 StopDto.of(
                     station.getId(),
                     station.getName(),
-                    station.getLatitude(),
-                    station.getLongitude(),
+                    station.getLatitude().doubleValue(),
+                    station.getLongitude().doubleValue(),
                     getRoutesForStop(station.getId())))
         .toList();
   }
