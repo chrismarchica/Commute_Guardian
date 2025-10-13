@@ -1,14 +1,23 @@
 package com.commute.mbta.service;
 
+import com.commute.mbta.entity.Route;
+import com.commute.mbta.entity.Stop;
+import com.commute.mbta.repository.StopRepository;
+import com.commute.mbta.service.MbtaApiClient.MbtaRoute;
+import com.commute.mbta.service.MbtaApiClient.MbtaRoutesResponse;
+import com.commute.mbta.service.MbtaApiClient.MbtaStop;
+import com.commute.mbta.service.MbtaApiClient.MbtaStopsResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /** Service for ingesting GTFS static data from files or URLs. */
@@ -18,10 +27,19 @@ public class DataIngestionService {
   private static final Logger logger = LoggerFactory.getLogger(DataIngestionService.class);
   private static final String FIXTURES_PATH = "fixtures/gtfs-static/mbta.zip";
 
+  private final MbtaApiClient mbtaApiClient;
+  private final StopRepository stopRepository;
+
+  @Autowired
+  public DataIngestionService(MbtaApiClient mbtaApiClient, StopRepository stopRepository) {
+    this.mbtaApiClient = mbtaApiClient;
+    this.stopRepository = stopRepository;
+  }
+
   /**
    * Load static GTFS data from the specified source.
    * 
-   * @param source Either "file" to load from fixtures or "url" to download from MBTA
+   * @param source Either "file" to load from fixtures, "url" to download from MBTA, or "api" to use MBTA API
    * @return Status message describing the ingestion result
    */
   public String loadStaticData(String source) throws Exception {
@@ -31,8 +49,10 @@ public class DataIngestionService {
       return loadFromFixtureFile();
     } else if ("url".equals(source)) {
       return loadFromUrl();
+    } else if ("api".equals(source)) {
+      return loadFromMbtaApi();
     } else {
-      throw new IllegalArgumentException("Invalid source: " + source + ". Use 'file' or 'url'");
+      throw new IllegalArgumentException("Invalid source: " + source + ". Use 'file', 'url', or 'api'");
     }
   }
 
@@ -77,7 +97,86 @@ public class DataIngestionService {
     // 3. Process same as file-based loading
     // 4. Clean up temporary files
 
-    throw new UnsupportedOperationException("URL-based loading not yet implemented. Use 'file' source.");
+    throw new UnsupportedOperationException("URL-based loading not yet implemented. Use 'api' source for real data.");
+  }
+
+  /**
+   * Load data directly from MBTA API v3.
+   */
+  private String loadFromMbtaApi() throws Exception {
+    logger.info("Loading data from MBTA API v3");
+    
+    int totalRecords = 0;
+    
+    try {
+      // Load stops from MBTA API
+      logger.info("Fetching stops from MBTA API...");
+      MbtaStopsResponse stopsResponse = mbtaApiClient.fetchAllStops();
+      int stopsLoaded = loadStopsFromApi(stopsResponse);
+      totalRecords += stopsLoaded;
+      
+      logger.info("Successfully loaded {} stops from MBTA API", stopsLoaded);
+      
+      // TODO: Load routes from MBTA API
+      // MbtaRoutesResponse routesResponse = mbtaApiClient.fetchAllRoutes();
+      // int routesLoaded = loadRoutesFromApi(routesResponse);
+      // totalRecords += routesLoaded;
+      
+      logger.info("MBTA API data loading completed. Total records: {}", totalRecords);
+      return String.format("Successfully loaded %d records from MBTA API (%d stops)", totalRecords, stopsLoaded);
+      
+    } catch (Exception e) {
+      logger.error("Failed to load data from MBTA API", e);
+      throw new Exception("Failed to load data from MBTA API: " + e.getMessage(), e);
+    }
+  }
+
+  /**
+   * Load stops from MBTA API response into database.
+   */
+  private int loadStopsFromApi(MbtaStopsResponse response) {
+    if (response.data == null || response.data.isEmpty()) {
+      logger.warn("No stops data received from MBTA API");
+      return 0;
+    }
+
+    logger.info("Processing {} stops from MBTA API", response.data.size());
+    int processed = 0;
+
+    for (MbtaStop mbtaStop : response.data) {
+      try {
+        // Skip stops without valid coordinates
+        if (mbtaStop.attributes.latitude == null || mbtaStop.attributes.longitude == null) {
+          logger.debug("Skipping stop {} - missing coordinates", mbtaStop.id);
+          continue;
+        }
+
+        // Create Stop entity
+        Stop stop = new Stop();
+        stop.setId(mbtaStop.id);
+        stop.setName(mbtaStop.attributes.name != null ? mbtaStop.attributes.name : "Unknown");
+        stop.setLatitude(BigDecimal.valueOf(mbtaStop.attributes.latitude));
+        stop.setLongitude(BigDecimal.valueOf(mbtaStop.attributes.longitude));
+        stop.setLocationType(mbtaStop.attributes.locationType != null ? mbtaStop.attributes.locationType : 0);
+        stop.setParentStation(mbtaStop.attributes.parentStation);
+        stop.setPlatformCode(mbtaStop.attributes.platformCode);
+        stop.setWheelchairBoarding(mbtaStop.attributes.wheelchairBoarding != null ? mbtaStop.attributes.wheelchairBoarding : 0);
+
+        // Save to database
+        stopRepository.save(stop);
+        processed++;
+
+        if (processed % 100 == 0) {
+          logger.info("Processed {} stops...", processed);
+        }
+
+      } catch (Exception e) {
+        logger.warn("Failed to process stop {}: {}", mbtaStop.id, e.getMessage());
+      }
+    }
+
+    logger.info("Successfully processed {} stops from MBTA API", processed);
+    return processed;
   }
 
   /**

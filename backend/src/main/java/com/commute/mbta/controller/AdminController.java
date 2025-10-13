@@ -34,8 +34,8 @@ public class AdminController {
       summary = "Load static GTFS data",
       description = "Load GTFS static data from file or URL source")
   public ResponseEntity<Map<String, Object>> loadStaticData(
-      @Parameter(description = "Data source: 'file' or 'url'", example = "file")
-          @RequestParam(defaultValue = "file")
+      @Parameter(description = "Data source: 'file', 'url', or 'api'", example = "api")
+          @RequestParam(defaultValue = "api")
           String source) {
 
     try {
