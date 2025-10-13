@@ -40,9 +40,11 @@ public class StopsService {
       // Extract data from native query result
       String id = (String) row[0];
       String name = (String) row[1];
-      BigDecimal latitude = (BigDecimal) row[2];
-      BigDecimal longitude = (BigDecimal) row[3];
-      BigDecimal distance = (BigDecimal) row[row.length - 1]; // Distance is last column
+      
+      // Handle both BigDecimal and Double types from PostgreSQL
+      double latitude = convertToDouble(row[2]);
+      double longitude = convertToDouble(row[3]);
+      double distance = convertToDouble(row[row.length - 1]); // Distance is last column
 
       // For now, return empty routes list - this would be populated from route_stops table
       List<String> routes = getRoutesForStop(id);
@@ -51,9 +53,9 @@ public class StopsService {
           StopDto.withDistance(
               id,
               name,
-              latitude.doubleValue(),
-              longitude.doubleValue(),
-              distance.doubleValue(),
+              latitude,
+              longitude,
+              distance,
               routes);
 
       stops.add(stopDto);
@@ -61,6 +63,22 @@ public class StopsService {
 
     logger.info("Found {} stops near {}, {}", stops.size(), lat, lon);
     return stops;
+  }
+
+  /**
+   * Convert a numeric value from PostgreSQL to double.
+   * Handles both BigDecimal and Double types.
+   */
+  private double convertToDouble(Object value) {
+    if (value instanceof BigDecimal) {
+      return ((BigDecimal) value).doubleValue();
+    } else if (value instanceof Double) {
+      return (Double) value;
+    } else if (value instanceof Number) {
+      return ((Number) value).doubleValue();
+    } else {
+      throw new IllegalArgumentException("Cannot convert " + value.getClass() + " to double");
+    }
   }
 
   /**

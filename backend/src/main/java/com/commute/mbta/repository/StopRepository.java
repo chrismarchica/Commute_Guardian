@@ -20,13 +20,21 @@ public interface StopRepository extends JpaRepository<Stop, String> {
       value =
           """
       SELECT s.*, 
-             (6371000 * acos(cos(radians(:lat)) * cos(radians(s.latitude)) 
-                           * cos(radians(s.longitude) - radians(:lon)) 
-                           + sin(radians(:lat)) * sin(radians(s.latitude)))) as distance
+             (6371000 * acos(
+               LEAST(1, GREATEST(-1, 
+                 cos(radians(:lat)) * cos(radians(s.latitude)) 
+                 * cos(radians(s.longitude) - radians(:lon)) 
+                 + sin(radians(:lat)) * sin(radians(s.latitude))
+               ))
+             )) as distance
       FROM stops s
-      WHERE (6371000 * acos(cos(radians(:lat)) * cos(radians(s.latitude)) 
-                           * cos(radians(s.longitude) - radians(:lon)) 
-                           + sin(radians(:lat)) * sin(radians(s.latitude)))) <= :radiusMeters
+      WHERE (6371000 * acos(
+               LEAST(1, GREATEST(-1,
+                 cos(radians(:lat)) * cos(radians(s.latitude)) 
+                 * cos(radians(s.longitude) - radians(:lon)) 
+                 + sin(radians(:lat)) * sin(radians(s.latitude))
+               ))
+             )) <= :radiusMeters
       ORDER BY distance
       LIMIT 50
       """,
