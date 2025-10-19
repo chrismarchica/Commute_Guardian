@@ -3,9 +3,12 @@ package com.commute.mbta.service;
 import com.commute.mbta.dto.StopDto;
 import com.commute.mbta.entity.Stop;
 import com.commute.mbta.repository.StopRepository;
+import com.commute.mbta.service.MbtaApiClient.MbtaRoute;
+import com.commute.mbta.service.MbtaApiClient.MbtaRoutesResponse;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +22,12 @@ public class StopsService {
   private static final Logger logger = LoggerFactory.getLogger(StopsService.class);
 
   private final StopRepository stopRepository;
+  private final MbtaApiClient mbtaApiClient;
 
   @Autowired
-  public StopsService(StopRepository stopRepository) {
+  public StopsService(StopRepository stopRepository, MbtaApiClient mbtaApiClient) {
     this.stopRepository = stopRepository;
+    this.mbtaApiClient = mbtaApiClient;
   }
 
   /**
@@ -47,7 +52,7 @@ public class StopsService {
       double distance = convertToDouble(row[row.length - 1]); // Distance is last column
 
       // For now, return empty routes list - this would be populated from route_stops table
-      List<String> routes = getRoutesForStop(id);
+      List<StopDto.RouteInfo> routes = getRoutesForStop(id);
 
       StopDto stopDto =
           StopDto.withDistance(
@@ -82,19 +87,67 @@ public class StopsService {
   }
 
   /**
-   * Get routes serving a specific stop.
-   * This is a placeholder - in a full implementation, this would query the route_stops table.
+   * Get routes serving a specific stop with direction information.
    */
-  private List<String> getRoutesForStop(String stopId) {
-    // TODO: Implement actual route lookup from route_stops table
-    // For now, return sample data based on common MBTA stops
-    return switch (stopId) {
-      case "place-pktrm" -> List.of("Red", "Green-B", "Green-C", "Green-D", "Green-E");
-      case "place-dwnxg" -> List.of("Orange", "Blue");
-      case "place-harsq" -> List.of("Red");
-      case "place-sstat" -> List.of("Red", "Silver");
-      default -> List.of();
-    };
+  @Cacheable(value = "stopRoutes", key = "#stopId")
+  private List<StopDto.RouteInfo> getRoutesForStop(String stopId) {
+    try {
+      // Fetch routes for this stop from MBTA API
+      MbtaRoutesResponse response = mbtaApiClient.fetchRoutesForStop(stopId);
+
+      if (response.data == null || response.data.isEmpty()) {
+        return List.of();
+      }
+
+      // Convert MBTA routes to RouteInfo with direction information
+      return response.data.stream()
+          .map(
+              route -> {
+                String routeName =
+                    route.attributes.shortName != null
+                        ? route.attributes.shortName
+                        : route.id;
+                Integer routeType = route.attributes.type != null ? route.attributes.type : 3;
+
+                // Build direction string from available data
+                String direction = buildDirectionString(route);
+
+                return new StopDto.RouteInfo(routeName, routeType, direction);
+              })
+          .collect(Collectors.toList());
+
+    } catch (Exception e) {
+      logger.warn("Failed to fetch routes for stop {}: {}", stopId, e.getMessage());
+      return List.of();
+    }
+  }
+
+  /**
+   * Build a human-readable direction string from route data.
+   */
+  private String buildDirectionString(MbtaRoute route) {
+    // Try direction_destinations first (e.g., ["Ashmont/Braintree", "Alewife"])
+    if (route.attributes.directionDestinations != null
+        && !route.attributes.directionDestinations.isEmpty()) {
+      return String.join(" / ", route.attributes.directionDestinations);
+    }
+
+    // Try direction_names (e.g., ["Southbound", "Northbound"])
+    if (route.attributes.directionNames != null && !route.attributes.directionNames.isEmpty()) {
+      return String.join(" / ", route.attributes.directionNames);
+    }
+
+    // Fall back to description or long name
+    if (route.attributes.description != null && !route.attributes.description.isEmpty()) {
+      return route.attributes.description;
+    }
+
+    if (route.attributes.longName != null) {
+      return route.attributes.longName;
+    }
+
+    // No direction information available
+    return "";
   }
 
   /**

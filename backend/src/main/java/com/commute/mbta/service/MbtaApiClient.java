@@ -99,6 +99,34 @@ public class MbtaApiClient {
     return objectMapper.readValue(response.body(), MbtaRoutesResponse.class);
   }
 
+  /**
+   * Fetch routes serving a specific stop with direction information.
+   */
+  public MbtaRoutesResponse fetchRoutesForStop(String stopId) throws IOException, InterruptedException {
+    String url = baseUrl + "/routes?filter[stop]=" + stopId;
+    logger.info("Fetching routes for stop {} from MBTA API: {}", stopId, url);
+
+    HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
+        .uri(URI.create(url))
+        .timeout(timeout)
+        .GET();
+
+    // Add API key if provided
+    if (apiKey != null && !apiKey.trim().isEmpty()) {
+      requestBuilder.header("X-API-Key", apiKey);
+    }
+
+    HttpRequest request = requestBuilder.build();
+    HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+    if (response.statusCode() != 200) {
+      throw new IOException("MBTA API returned status " + response.statusCode() + ": " + response.body());
+    }
+
+    logger.debug("Successfully fetched routes for stop {}", stopId);
+    return objectMapper.readValue(response.body(), MbtaRoutesResponse.class);
+  }
+
   // Response DTOs for MBTA API
 
   @JsonIgnoreProperties(ignoreUnknown = true)
@@ -171,5 +199,14 @@ public class MbtaApiClient {
 
     @JsonProperty("text_color")
     public String textColor;
+
+    @JsonProperty("direction_destinations")
+    public List<String> directionDestinations;
+
+    @JsonProperty("direction_names")
+    public List<String> directionNames;
+
+    @JsonProperty("description")
+    public String description;
   }
 }

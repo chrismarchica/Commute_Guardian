@@ -2,6 +2,7 @@ package com.commute.mbta.service;
 
 import com.commute.mbta.entity.Route;
 import com.commute.mbta.entity.Stop;
+import com.commute.mbta.repository.RouteRepository;
 import com.commute.mbta.repository.StopRepository;
 import com.commute.mbta.service.MbtaApiClient.MbtaRoute;
 import com.commute.mbta.service.MbtaApiClient.MbtaRoutesResponse;
@@ -29,11 +30,16 @@ public class DataIngestionService {
 
   private final MbtaApiClient mbtaApiClient;
   private final StopRepository stopRepository;
+  private final RouteRepository routeRepository;
 
   @Autowired
-  public DataIngestionService(MbtaApiClient mbtaApiClient, StopRepository stopRepository) {
+  public DataIngestionService(
+      MbtaApiClient mbtaApiClient,
+      StopRepository stopRepository,
+      RouteRepository routeRepository) {
     this.mbtaApiClient = mbtaApiClient;
     this.stopRepository = stopRepository;
+    this.routeRepository = routeRepository;
   }
 
   /**
@@ -117,13 +123,18 @@ public class DataIngestionService {
       
       logger.info("Successfully loaded {} stops from MBTA API", stopsLoaded);
       
-      // TODO: Load routes from MBTA API
-      // MbtaRoutesResponse routesResponse = mbtaApiClient.fetchAllRoutes();
-      // int routesLoaded = loadRoutesFromApi(routesResponse);
-      // totalRecords += routesLoaded;
+      // Load routes from MBTA API
+      logger.info("Fetching routes from MBTA API...");
+      MbtaRoutesResponse routesResponse = mbtaApiClient.fetchAllRoutes();
+      int routesLoaded = loadRoutesFromApi(routesResponse);
+      totalRecords += routesLoaded;
+      
+      logger.info("Successfully loaded {} routes from MBTA API", routesLoaded);
       
       logger.info("MBTA API data loading completed. Total records: {}", totalRecords);
-      return String.format("Successfully loaded %d records from MBTA API (%d stops)", totalRecords, stopsLoaded);
+      return String.format(
+          "Successfully loaded %d records from MBTA API (%d stops, %d routes)",
+          totalRecords, stopsLoaded, routesLoaded);
       
     } catch (Exception e) {
       logger.error("Failed to load data from MBTA API", e);
@@ -176,6 +187,49 @@ public class DataIngestionService {
     }
 
     logger.info("Successfully processed {} stops from MBTA API", processed);
+    return processed;
+  }
+
+  /**
+   * Load routes from MBTA API response into database.
+   */
+  private int loadRoutesFromApi(MbtaRoutesResponse response) {
+    if (response.data == null || response.data.isEmpty()) {
+      logger.warn("No routes data received from MBTA API");
+      return 0;
+    }
+
+    logger.info("Processing {} routes from MBTA API", response.data.size());
+    int processed = 0;
+
+    for (MbtaRoute mbtaRoute : response.data) {
+      try {
+        // Create Route entity
+        Route route = new Route();
+        route.setId(mbtaRoute.id);
+        route.setShortName(mbtaRoute.attributes.shortName);
+        route.setLongName(
+            mbtaRoute.attributes.longName != null
+                ? mbtaRoute.attributes.longName
+                : "Unknown Route");
+        route.setRouteType(mbtaRoute.attributes.type != null ? mbtaRoute.attributes.type : 3);
+        route.setColor(mbtaRoute.attributes.color);
+        route.setTextColor(mbtaRoute.attributes.textColor);
+
+        // Save to database
+        routeRepository.save(route);
+        processed++;
+
+        if (processed % 10 == 0) {
+          logger.info("Processed {} routes...", processed);
+        }
+
+      } catch (Exception e) {
+        logger.warn("Failed to process route {}: {}", mbtaRoute.id, e.getMessage());
+      }
+    }
+
+    logger.info("Successfully processed {} routes from MBTA API", processed);
     return processed;
   }
 

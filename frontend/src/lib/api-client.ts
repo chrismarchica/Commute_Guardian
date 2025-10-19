@@ -103,13 +103,19 @@ export interface HealthResponse {
   version: string
 }
 
+export interface RouteInfo {
+  name: string
+  type: number // 0=Tram, 1=Subway, 2=Rail, 3=Bus
+  direction: string // Direction or destination (e.g., "Ashmont/Braintree", "Boston College")
+}
+
 export interface Stop {
   id: string
   name: string
   latitude: number
   longitude: number
   distanceMeters?: number
-  routes: string[]
+  routes: RouteInfo[]
 }
 
 export interface ReliabilityMetrics {
